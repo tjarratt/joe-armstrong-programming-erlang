@@ -1,5 +1,5 @@
 -module(lib_misc).
--export([for/3, qsort/1, pythag/1, permutations/1, odds_and_evens1/1, odds_and_evens2/1]).
+-export([for/3, qsort/1, pythag/1, permutations/1, odds_and_evens1/1, odds_and_evens2/1, my_tuple_to_list/1, my_filter/2]).
 
 for(Max, Max, F) -> [F(Max)];
 for(I, Max, F) -> [F(I) | for(I + 1, Max, F)].
@@ -42,4 +42,14 @@ odds_and_evens_acc([H|Tail], Odds, Evens) ->
 odds_and_evens_acc([], Odds, Evens) ->
   {Odds, Evens}.
 
+my_tuple_to_list(Tuple) ->
+  my_tuple_to_list_acc(Tuple, []).
 
+my_tuple_to_list_acc({}, List) -> lists:reverse(List);
+my_tuple_to_list_acc(Tuple, List) ->
+  T = erlang:element(1, Tuple),
+  Remaining_Tuple = erlang:delete_element(1, Tuple),
+  my_tuple_to_list_acc(Remaining_Tuple, [T | List]).
+
+my_filter(Filter, List) -> 
+  [ X || X <- List, Filter(X) =:= true ].
